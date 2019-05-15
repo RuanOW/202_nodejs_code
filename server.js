@@ -1,45 +1,41 @@
 var http = require('http'); // Require the HTTP module that ships with node
 var queryString = require('querystring'); // Require the querystring module to get access to the query information
+var fs =  require('fs'); // Require the FS module to get access to the file system.
+var template = require('es6-template-strings'); //Require our newly installed module that will insert the data into the html file
+
+var contacts = []; // We can use this contacts variable to store all of the contacts that connected to the chat
 
 var server = http.createServer(); // Abstract away the server method for refactoring purposes
 
 // A function to handle the GET Requests
 var handleFormGet = function(request, response) {
-  // write the Head to also include the type of content we are sending to the browser
-  response.writeHead(200, {"Content-Type":"text/html"});
-  response.write('<DOCTYPE html>');
-  response.write('<html>');
-  response.write('<body>');
-  response.write('<form method="POST">');
-  response.write('<label for="username">Username:</label>');
-  response.write('<input type="text" name="username">');
-  response.write('<input type="submit" value="submit">');
-  response.write('</form>');
-  response.write('</body>');
-  response.write('</html>');
-  response.end();
+  response.writeHead(200, {"Content-Type": "text/html"});
+  fs.readFile('templates/form.html', 'utf8', function(err, data) {
+    if (err) { throw err; }
+    response.write(data);
+    response.end();
+  });
 }
 
 // A function to handle the POST Requests
 var handleFormPost = function(request, response) {
-  response.writeHead(200, {"Content-Type": "text/html"}); // write the Head to also include the type of content we are sending to the browser
-  var body = ''; // Create a variable to store the body data coming in on the request
+  response.writeHead(200, {"Content-Type": "text/html"});
+  var payload = '';
 
   request.on('data', function (data) {
-    body += data;
+    payload += data;
   });
 
   request.on('end', function () {
-    var post = queryString.parse(body);
+    var post = queryString.parse(payload);
+    contacts.push(post['username']);
     response.writeHead(200, {"Content-Type": "text/html"});
-    response.write('<DOCTYPE html>');
-    response.write('<html>');
-    response.write('<body>');
-    response.write('<h3>Hi ' + post['username']);
-    response.write('</form>');
-    response.write('</body>');
-    response.write('</html>');
-    response.end();
+    fs.readFile('templates/contacts.html', 'utf8', function(err, data) {
+      if (err) { throw err; }
+      var compiled = template(data, {username: post['username'], userList: contacts.join(",")});
+      response.write(compiled);
+      response.end();
+    });
   });
 }
 

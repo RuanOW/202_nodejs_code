@@ -1,0 +1,23 @@
+{
+  "name": "202_nodejs_code",
+  "version": "1.0.0",
+  "description": "This file contains only the current week notes for easy access. The previous weeks' notes are commented out so that this file always has all of the notes at the end of the class.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RuanOW/202_nodejs_code.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RuanOW/202_nodejs_code/issues"
+  },
+  "homepage": "https://github.com/RuanOW/202_nodejs_code#readme",
+  "dependencies": {
+    "es6-template-strings": "^2.0.1"
+  }
+}
