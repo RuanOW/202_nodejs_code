@@ -7,6 +7,33 @@ var contacts = []; // We can use this contacts variable to store all of the cont
 
 var server = http.createServer(); // Abstract away the server method for refactoring purposes
 
+var simpleRouter = function(request) {
+  var method = request.method;
+  var path = request.url;
+
+  // Strip the query from the ? character
+  var queryIndex = request.url.indexOf('?');
+  if (queryIndex >= 0) {
+    path = request.url.slice(0, queryIndex)
+  }
+
+  var suppliedRoute = {method: method, path: path}
+  var routes = [
+    {method: 'GET', path: '/', handler: handleFormGet},
+    {method: 'POST', path: '/', handler: handleFormPost}
+  ];
+
+  // Match the supplied route with the route visited and call the respective handler
+  for (var i = 0; i < routes.length; i++) {
+    var route = routes[i];
+    if ( route.method === suppliedRoute.method &&
+      route.path === suppliedRoute.path ) {
+      return route.handler;
+    }
+  }
+  return null;
+}
+
 // A function to handle the GET Requests
 var handleFormGet = function(request, response) {
   response.writeHead(200, {"Content-Type": "text/html"});
@@ -42,17 +69,13 @@ var handleFormPost = function(request, response) {
 
 // Call the 'on' method on the server to handle the incoming request
 server.on("request", function(request, response) {
- if(request.method === 'GET'){
-   //Call the handleFormGet function to handle the GET request
-   handleFormGet(request, response);
- } else if(request.method) {
-   // Call the handleFormPost function to handle the POST requests
-   handleFormPost(request, response);
- } else {
-   //Send a 404 error if we don't know the type of request
-   response.writeHead(404);
-   response.end();
- }
+  var handler = simpleRouter(request);
+  if (handler != null) {
+    handler(request, response);
+  } else {
+    response.writeHead(404);
+    response.end();
+  }
 })
 
 server.listen(8080, function() {
