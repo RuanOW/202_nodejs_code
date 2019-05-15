@@ -254,7 +254,7 @@ including the username that was extracted from the POST request.
 
 ### REFACTORING INTO HTML
 
-Last week we returned some HTML from our node server by `calling response.write(data);` on each line of HTML we wanted to return. While this works, it makes the HTML quite difficult to read, write, and maintain. Let’s move the HTML from the **handleFormGet** method to a separate file. Create a directory called **templates** in your project folder and add a file called **form.html** to that directory. The **form.html** simply holds the HTML we want to return when the form is requested.
+Last week we returned some HTML from our node server by calling `response.write(data);` on each line of HTML we wanted to return. While this works, it makes the HTML quite difficult to read, write, and maintain. Let’s move the HTML from the **handleFormGet** method to a separate file. Create a directory called **templates** in your project folder and add a file called **form.html** to that directory. The **form.html** simply holds the HTML we want to return when the form is requested.
 
 ```html
 <!DOCTYPE html>
